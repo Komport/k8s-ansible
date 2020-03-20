@@ -24,7 +24,9 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
     > 10.1.31.14		worker1
     
     > 10.1.31.15		worker2
-
+    
+    > EOF
+    
 3. Master node üzərində ssh-key yaradılaraq bütün nodelar ilə ssh vasitəsilə şifrəsiz qoşulma imkanı yaradılmalıdır:
    [root@master ~]# ssh-keygen
    
