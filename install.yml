@@ -26,7 +26,7 @@
     selinux:
       state: disabled
     args:
-    warn: false
+     warn: false
     
   - name: Play6 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
     shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
@@ -72,7 +72,7 @@
      value: 1
      state: present
     args:
-    warn: false 
+     warn: false 
 ###### MASTER NODE ######
 - hosts: masters
   vars_files:
