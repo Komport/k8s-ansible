@@ -18,53 +18,62 @@
      name: firewalld
      state: stopped
      enabled : no
+     
+  - name: Play3 Firewall servisin deaktiv edilməsi
+    service:
+     name: firewalld
+     state: stopped
+     enabled : no
+   
+  - name: Play4 Selinux servisin deaktiv edilməsi
+    command: setenforce 0
 
-  - name: Play4 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
+  - name: Play5 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
     shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-  - name: Play5 Install Docker CE
+  - name: Play6 Install Docker CE
     shell: dnf install --nobest -y docker-ce
 
-  - name: Play6 Kubernetes üçün repozitori yaradılması
+  - name: Play7 Kubernetes üçün repozitori yaradılması
     yum_repository:
      name: Kubernetes
      description: Kubernetes YUM repository
      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
-  - name: Play7 Lazımi paketlərin yüklənməsi
+  - name: Play8 Lazımi paketlərin yüklənməsi
     dnf:
      name: "{{ item }}"
      state: present
     loop: "{{ packages }}"
 
-  - name: Play8 Docker cgroup drayverinin systemd olaraq təyin edilməsi
+  - name: Play9 Docker cgroup drayverinin systemd olaraq təyin edilməsi
     lineinfile:
      path: /usr/lib/systemd/system/docker.service
      regexp: '^ExecStart'
      line: 'ExecStart=/usr/bin/dockerd -H fd:// --exec-opt native.cgroupdriver=systemd'
      
-  - name: Play9 Daemon Reload 
+  - name: Play10 Daemon Reload 
     systemd:
      state: restarted
      daemon_reload: yes
      name: docker
 
-  - name: Play10 Servislərin işə salınması və aktivləşdirilməsi
+  - name: Play11 Servislərin işə salınması və aktivləşdirilməsi
     service:
      name: "{{ item }}"
      state: started
      enabled: yes
     loop: "{{ services }}"
 
-  - name: Play11 Klaster IPV4 komunikasiyasını təmin edilməsi üçün br_netfilter modulunun aktivləşdirilməsi
+  - name: Play12 Klaster IPV4 komunikasiyasını təmin edilməsi üçün br_netfilter modulunun aktivləşdirilməsi
     sysctl:
      name: net.bridge.bridge-nf-call-iptables
      value: 1
      state: present
 
-  - name: Play12 Master node formalaşdırdığı tokenin worker nodelara köçürülməsi
+  - name: Play13 Master node formalaşdırdığı tokenin worker nodelara köçürülməsi
     copy: src={{ token_file }} dest=join_token
 
-  - name: Play13 Worker nodeların klasterə əlavə edilməsi
+  - name: Play14 Worker nodeların klasterə əlavə edilməsi
     shell: "`grep -i 'kubeadm join' join_token`"
