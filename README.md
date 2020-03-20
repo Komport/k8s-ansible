@@ -7,6 +7,7 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 İnstruksiya:
 
 1. Master node üzərində "git" proqram təminatı vasitəsilə qurulum üçün istifadə ediləcək repozitory yüklənir (əgər master node-da "git" yoxdursa, əvvəlcə onu quraşdırmaq gərəkdir):
+
    [root@master ~]# git clone https://github.com/anargurbanli/k8s-ansible
 
 2. Serverlərin bir-birini görə bilməsi üçün host fayllarda (və ya DNS serverdə) uyğun sazlamaların aparılır və ip adreslər host adları ilə adlandırılır:
