@@ -18,46 +18,53 @@
      name: firewalld
      state: stopped
      enabled : no
+   
+  - name: Play4 Selinux servisin deaktiv edilməsi
+    command: setenforce 0
 
-  - name: Play4 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
+  - name: Play5 Selinux servisin restart zamanı deaktiv olmasının təmin edilməsi
+    selinux:
+      state: disabled
+
+  - name: Play6 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
     shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-  - name: Play5 Install Docker CE
+  - name: Play7 Install Docker CE
     shell: dnf install --nobest -y docker-ce
 
-  - name: Play6 Kubernetes üçün repozitori yaradılması
+  - name: Play8 Kubernetes üçün repozitori yaradılması
     yum_repository:
      name: Kubernetes
      description: Kubernetes YUM repository
      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
-  - name: Play7 Lazımi paketlərin yüklənməsi
+  - name: Play9 Lazımi paketlərin yüklənməsi
     dnf:
      name: "{{ item }}"
      state: present
     loop: "{{ packages }}"
 
-  - name: Play8 Docker cgroup drayverinin systemd olaraq təyin edilməsi
+  - name: Play10 Docker cgroup drayverinin systemd olaraq təyin edilməsi
     lineinfile:
      path: /usr/lib/systemd/system/docker.service
      regexp: '^ExecStart'
      line: 'ExecStart=/usr/bin/dockerd -H fd:// --exec-opt native.cgroupdriver=systemd'
      
-  - name: Play9 Daemon Reload 
+  - name: Play11 Daemon Reload 
     systemd:
      state: restarted
      daemon_reload: yes
      name: docker
 
-  - name: Play10 Servislərin işə salınması və aktivləşdirilməsi
+  - name: Play12 Servislərin işə salınması və aktivləşdirilməsi
     service:
      name: "{{ item }}"
      state: started
      enabled: yes
     loop: "{{ services }}"
 
-  - name: Play11 Klaster IPV4 komunikasiyasını təmin edilməsi üçün br_netfilter modulunun aktivləşdirilməsi
+  - name: Play13 Klaster IPV4 komunikasiyasını təmin edilməsi üçün br_netfilter modulunun aktivləşdirilməsi
     sysctl:
      name: net.bridge.bridge-nf-call-iptables
      value: 1
@@ -69,31 +76,31 @@
   - vars_file
   tasks:
   
-  - name: Play12 kubectl servis paketinin quraşdırılması
+  - name: Play14 kubectl servis paketinin quraşdırılması
     dnf:
      name: kubectl
      state: present
      
-  - name: Play13 K8s klaster konfiqurasiyası üçün tələb olunan obrazların yüklənməsi
+  - name: Play15 K8s klaster konfiqurasiyası üçün tələb olunan obrazların yüklənməsi
     shell: kubeadm config images pull
 
-  - name: Play14 Klaster qurulumunun initalizasiyası, pod şəbəkəsinin təyin edilməsi
+  - name: Play16 Klaster qurulumunun initalizasiyası, pod şəbəkəsinin təyin edilməsi
     shell: kubeadm init --pod-network-cidr={{pods_network}}
 
-  - name: Play15 Klasterə worker nodeların qoşulması üçün tokenin yaradılması
+  - name: Play17 Klasterə worker nodeların qoşulması üçün tokenin yaradılması
     shell: kubeadm token create --print-join-command
     register: output
 
-  - name: Play16 Yaradılmış tokenin faylda yadda saxlanılması
+  - name: Play18 Yaradılmış tokenin faylda yadda saxlanılması
     local_action: copy content={{ output.stdout }} dest={{ token_file }}
 
-  - name: Play17 Konfiqruasiya direktoriyasının yaradılması və sazlamaların köçürülməsi
+  - name: Play19 Konfiqruasiya direktoriyasının yaradılması və sazlamaların köçürülməsi
     shell: |
      mkdir -p $HOME/.kube
      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
      sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-  - name: Play18 Virtual şəbəkənin təmin edilməsi üçün Flannel yüklənilməsi
+  - name: Play20 Virtual şəbəkənin təmin edilməsi üçün Flannel yüklənilməsi
     shell: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
 ###### WORKER NODE ######
@@ -101,8 +108,8 @@
   vars_files:
   - vars_file
   tasks:
-  - name: Play19 Master node formalaşdırdığı tokenin worker nodelara köçürülməsi
+  - name: Play21 Master node formalaşdırdığı tokenin worker nodelara köçürülməsi
     copy: src={{ token_file }} dest=join_token
 
-  - name: Play20 Worker nodeların klasterə əlavə edilməsi
+  - name: Play22 Worker nodeların klasterə əlavə edilməsi
     shell: "`grep -i 'kubeadm join' join_token`"
