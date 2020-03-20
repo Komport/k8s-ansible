@@ -32,21 +32,21 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 
 > [root@master ~]# ssh-copy-id master
    
-   [root@master ~]# ssh-copy-id worker1
+> [root@master ~]# ssh-copy-id worker1
    
-   [root@master ~]# ssh-copy-id worker2
+> [root@master ~]# ssh-copy-id worker2
 
 4. Master node üzərində ansible proqram təminatı quraşdırılmalıdır:
 
-   [root@master ~]# dnf install -y epel-release
+> [root@master ~]# dnf install -y epel-release
    
-   [root@master ~]# dnf install -y ansible
+> [root@master ~]# dnf install -y ansible
    
 5. Node-ların idarəolunmasını yoxlamaq üçün, master node-da yüklənmiş repozitoriyə daxil olmaq və "hosts" faylında sazlamalar apararaq master və worker node-ların adlarını düzgün qeyd etmək gərəkdir:
 
-[root@master ~]# cd ~/k8s-ansible
+> [root@master ~]# cd ~/k8s-ansible
 
-[root@master k8s-ansible]# vi hosts
+> [root@master k8s-ansible]# vi hosts
 
 6. Master node-un ansible vasitəsilə bütün nodeları idarəetmə imkanı yoxlanılır:
 
@@ -60,8 +60,8 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 
 9. Qurulum bitdikdən sonra master node üzərində "kubectl" komandası vasitəsilə klasterin cari vəziyyəti yoxlanılır:
 
-  [root@master k8s-ansible]# kubectl get nodes
+ > [root@master k8s-ansible]# kubectl get nodes
 
 10. Klasterə node əlavə edilməsi, add-worker.yml playbook-da yeni node-un host adı qeyd edilməklə reallaşdırıla bilər:
 
-  [root@master k8s-ansible]# ansible-playbook add-worker.yml
+ > [root@master k8s-ansible]# ansible-playbook add-worker.yml
