@@ -27,9 +27,10 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
     
     > EOF
 3. Master node üzərində ssh-key yaradılaraq bütün nodelar ilə ssh vasitəsilə şifrəsiz qoşulma imkanı yaradılmalıdır:
-   [root@master ~]# ssh-keygen
-   
-   [root@master ~]# ssh-copy-id master
+
+> [root@master ~]# ssh-keygen
+
+> [root@master ~]# ssh-copy-id master
    
    [root@master ~]# ssh-copy-id worker1
    
