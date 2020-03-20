@@ -50,7 +50,7 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 
 6. Master node-un ansible vasitəsilə bütün nodeları idarəetmə imkanı yoxlanılır:
 
-   [root@master k8s-ansible]# ansible all -m ping
+ > [root@master k8s-ansible]# ansible all -m ping
 
 7. Master node-da cari qovluqda yerləşən "vars_file" faylında pods_network parametrinə qiymət təyin etməklə, klasterdə yaradılacaq pod-lar üçün şəbəkə təyin edilməsini xüsusiləşdirmək mümkündür.
 
