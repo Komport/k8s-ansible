@@ -25,9 +25,7 @@
   - name: Play5 Selinux servisin restart zamanı deaktiv olmasının təmin edilməsi
     selinux:
       state: disabled
-    args:
-     warn: false
-    
+      
   - name: Play6 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
     shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
@@ -71,8 +69,7 @@
      name: net.bridge.bridge-nf-call-iptables
      value: 1
      state: present
-    args:
-     warn: false 
+     
 ###### MASTER NODE ######
 - hosts: masters
   vars_files:
