@@ -1,0 +1,70 @@
+---
+###### ADD-WORKER ######
+- hosts: worker3
+  vars_files:
+  - vars_file
+  tasks:
+  - name: Swap yaddaş həcminin deaktiv edilməsi
+    shell: swapoff -a
+
+  - name: Swap yaddaş həcminin /etc/fstab faylında deaktiv edilməsi
+    replace:
+     path: /etc/fstab
+     regexp: '(.*swap*)'
+     replace: '#\1'
+
+  - name: Firewall servisin deaktiv edilməsi
+    service:
+     name: firewalld
+     state: stopped
+     enabled : no
+
+  - name: Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
+    shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+  - name: Install Docker CE
+    shell: dnf install --nobest -y docker-ce
+
+  - name: Kubernetes üçün repozitori yaradılması
+    yum_repository:
+     name: Kubernetes
+     description: Kubernetes YUM repository
+     baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+     gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+  - name: Lazımi paketlərin yüklənməsi
+    dnf:
+     name: "{{ item }}"
+     state: present
+    loop: "{{ packages }}"
+
+  - name: Docker cgroup drayverinin systemd olaraq təyin edilməsi
+    lineinfile:
+     path: /usr/lib/systemd/system/docker.service
+     regexp: '^ExecStart'
+     line: 'ExecStart=/usr/bin/dockerd -H fd:// --exec-opt native.cgroupdriver=systemd'
+     
+  - name: Daemon Reload 
+    systemd:
+     state: restarted
+     daemon_reload: yes
+     name: docker
+
+  - name: Servislərin işə salınması və aktivləşdirilməsi
+    service:
+     name: "{{ item }}"
+     state: started
+     enabled: yes
+    loop: "{{ services }}"
+
+  - name: Klaster IPV4 komunikasiyasını təmin edilməsi üçün br_netfilter modulunun aktivləşdirilməsi
+    sysctl:
+     name: net.bridge.bridge-nf-call-iptables
+     value: 1
+     state: present
+
+  - name: Master node formalaşdırdığı tokenin worker nodelara köçürülməsi
+    copy: src={{ token_file }} dest=join_token
+
+  - name: Worker nodeların klasterə əlavə edilməsi
+    shell: "`grep -i 'kubeadm join' join_token`"
