@@ -17,18 +17,27 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 
 2. Serverlərin bir-birini görə bilməsi üçün host fayllarda (və ya DNS serverdə) uyğun sazlamaların aparılır və ip adreslər host adları ilə adlandırılır:
    [root@master ~]# cat << /etc/hosts >> EOF
+   
     > 10.1.31.13		master
+    
     > 10.1.31.14		worker1
+    
     > 10.1.31.15		worker2
     
   [root@worker1 ~]# cat << /etc/hosts >> EOF
+  
     > 10.1.31.13		master
+    
     > 10.1.31.14		worker1
+    
     > 10.1.31.15		worker2
     
   [root@worker2 ~]# cat << /etc/hosts >> EOF
+  
     > 10.1.31.13		master
+    
     > 10.1.31.14		worker1
+    
     > 10.1.31.15		worker2
 
 3. Master node üzərində ssh-key yaradılaraq bütün nodelar ilə ssh vasitəsilə şifrəsiz qoşulma imkanı yaradılmalıdır:
