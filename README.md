@@ -15,26 +15,10 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
    
    [root@master ~]# git clone https://github.com/anargurbanli/k8s-ansible
 
-2. Serverlərin bir-birini görə bilməsi üçün host fayllarda (və ya DNS serverdə) uyğun sazlamaların aparılır və ip adreslər host adları ilə adlandırılır:
+2. Serverlərin bir-birini görə bilməsi üçün host fayllarda (və ya DNS serverdə) uyğun sazlamaların aparılır və ip adreslər host adları ilə adlandırılır (komanda hər 3 node üzərində təkrarlanmalıdır):
 
    [root@master ~]# cat << /etc/hosts >> EOF
    
-    > 10.1.31.13		master
-    
-    > 10.1.31.14		worker1
-    
-    > 10.1.31.15		worker2
-    
-  [root@worker1 ~]# cat << /etc/hosts >> EOF
-  
-    > 10.1.31.13		master
-    
-    > 10.1.31.14		worker1
-    
-    > 10.1.31.15		worker2
-    
-  [root@worker2 ~]# cat << /etc/hosts >> EOF
-  
     > 10.1.31.13		master
     
     > 10.1.31.14		worker1
