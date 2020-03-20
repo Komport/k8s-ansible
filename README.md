@@ -47,4 +47,5 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 9. Qurulum bitdikdən sonra master node üzərində "kubectl" komandası vasitəsilə klasterin cari vəziyyəti yoxlanılır:
   [root@master k8s-ansible]# kubectl get nodes
 
-10. Klasterə başqa node-lar əlavə etmək üçün, 
+10. Klasterə node əlavə edilməsi, add-worker.yml playbook-da yeni node-un host adı qeyd edilməklə reallaşdırıla bilər:
+  [root@master k8s-ansible]# ansible-playbook add-worker.yml
