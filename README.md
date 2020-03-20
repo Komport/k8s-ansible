@@ -17,10 +17,12 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
     > 10.1.31.13		master
     > 10.1.31.14		worker1
     > 10.1.31.15		worker2
+    
   [root@worker1 ~]# cat << /etc/hosts >> EOF
     > 10.1.31.13		master
     > 10.1.31.14		worker1
     > 10.1.31.15		worker2
+    
   [root@worker2 ~]# cat << /etc/hosts >> EOF
     > 10.1.31.13		master
     > 10.1.31.14		worker1
@@ -28,27 +30,37 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 
 3. Master node üzərində ssh-key yaradılaraq bütün nodelar ilə ssh vasitəsilə şifrəsiz qoşulma imkanı yaradılmalıdır:
    [root@master ~]# ssh-keygen
+   
    [root@master ~]# ssh-copy-id master
+   
    [root@master ~]# ssh-copy-id worker1
+   
    [root@master ~]# ssh-copy-id worker2
 
-4. Master node üzərində ansible proqram təminatı quraşdırılmalı
+4. Master node üzərində ansible proqram təminatı quraşdırılmalıdır:
+
    [root@master ~]# dnf install -y epel-release
+   
    [root@master ~]# dnf install -y ansible
    
-5. Node-ların idarəolunmasını yoxlamaq üçün, master node-da yüklənmiş repozitoriyə daxil olmaq və "hosts" faylında sazlamalar apararaq master və worker node-ların adlarını düzgün qeyd etmək gərəkdir.
+5. Node-ların idarəolunmasını yoxlamaq üçün, master node-da yüklənmiş repozitoriyə daxil olmaq və "hosts" faylında sazlamalar apararaq master və worker node-ların adlarını düzgün qeyd etmək gərəkdir:
+
 [root@master k8s-ansible]# vim hosts
 
 6. Master node-un ansible vasitəsilə bütün nodeları idarəetmə imkanı yoxlanılır:
+
    [root@master k8s-ansible]# ansible all -m ping
 
 7. Master node-da cari qovluqda "vars_file" faylında pods_network parametrinə qiymət təyin etməklə, klasterdə yaradılacaq pod-lar üçün şəbəkə təyin edilməsini xüsusiləşdirmək mümkündür.
 
 8. Master node-da cari qovluqda "k8s-install.yml" playbook-u işə salınır və qurulum icra olunur:
+
   [root@master k8s-ansible]# ansible-playbook k8s-install.yml
 
 9. Qurulum bitdikdən sonra master node üzərində "kubectl" komandası vasitəsilə klasterin cari vəziyyəti yoxlanılır:
+
   [root@master k8s-ansible]# kubectl get nodes
 
 10. Klasterə node əlavə edilməsi, add-worker.yml playbook-da yeni node-un host adı qeyd edilməklə reallaşdırıla bilər:
+
   [root@master k8s-ansible]# ansible-playbook add-worker.yml
