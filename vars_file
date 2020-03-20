@@ -1,0 +1,17 @@
+pods_network: 172.20.0.0/16 # Pod-lar üçün təyin ediləcək şəbəkə dəyişəni (Dəyişdirilə bilər)
+
+# Paket dəyişənləri (toxunmayın)
+packages:
+- yum-utils
+- device-mapper-persistent-data
+- lvm2
+- kubeadm
+- kubelet
+
+# Servislər üçün dəyişənlər (toxunmayın)
+services:
+- docker
+- kubelet
+
+# Klasterə qoşulmaq üçün istifadə ediləcək token üçün dəyişən (toxunmayın)
+token_file: join_token
