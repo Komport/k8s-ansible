@@ -56,7 +56,7 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 
 8. Master node-da cari qovluqda "k8s-install.yml" playbook-u işə salınır və qurulum icra olunur:
 
-  [root@master k8s-ansible]# ansible-playbook k8s-install.yml
+ > [root@master k8s-ansible]# ansible-playbook k8s-install.yml
 
 9. Qurulum bitdikdən sonra master node üzərində "kubectl" komandası vasitəsilə klasterin cari vəziyyəti yoxlanılır:
 
