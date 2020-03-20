@@ -1,7 +1,10 @@
 # Kubernetes Klaster Qurulum (Ansible vasitəsilə)
 Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible playbook-ları özündə birləşdirir. Repozitori vasitəsilə k8s qurulumu virtual, fiziki və ya bulud texnologiyalarında yerləşən serverlər üzərinə icra edilə bilər. Qurulum üçün 3 ədəd Linux distributivi (Centos8) quraşdırılmış serverə ehtiyac var. Klaster, 1 ədəd master və 2 ədəd worker tipli serverdən ibarət olacaq. Hər 3 serverin global şəbəkəyə (internet) çıxışı təmin edilməlidir. Qurulum hər 3 serverdə "root" istifadəçisi vasitəsilə aparılacaq (əlavə sazlamalar aparmaqla adi istifadəçi vasitəsilə də reallaşdırmaq olar). Avtomatlaşdırma üçün ansible proqram təminatı master node üzərində quraşdırılacaq və özü də daxil olmaqla digər nodeları idarə edəcək (Klasterə sonradan worker tipli node əlavə edilməsi üçün ayrıca playbook repozitoridə yerləşdirilmişdir). Qurulum, Centos8 distributivi üzərində testləşdirilib. Host adları və ip ünvanları xüsusiləşdirilə bilər:
+
    master
+   
    worker1
+   
    worker2
 
 İnstruksiya:
