@@ -17,7 +17,7 @@ Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 
 2. Serverlərin bir-birini görə bilməsi üçün host fayllarda (və ya DNS serverdə) uyğun sazlamaların aparılır və ip adreslər host adları ilə adlandırılır (komanda hər 3 node üzərində təkrarlanmalıdır):
 
-  cat << EOF >> /etc/hosts
+    [root@master ~]# cat << EOF >> /etc/hosts
   
     > 10.1.31.13		master
     
