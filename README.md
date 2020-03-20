@@ -1,5 +1,5 @@
 # Kubernetes Klaster Qurulum (Ansible vasitəsilə)
-Bu repozitory, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible playbook-ları özündə birləşdirir. Repozitori virtual, fiziki və ya bulud texnologiyalarında yerləşən serverlər üzərinə icra edilə bilər. Qurulum, Centos8 distributivi üzərində testləşdirilib. Hər 3 serverin global şəbəkəyə (internet) çıxışı təmin edilməlidir. Qurulum hər 3 serverdə "root" istifadəçisi vasitəsilə aparılacaq (əlavə sazlamalar aparmaqla adi istifadəçi vasitəsilə də reallaşdırmaq olar). Qurulum üçün 3 ədəd Linux distributivi (Centos8) quraşdırılmış serverə ehtiyac var.  Klaster, 1 ədəd master və 2   ədəd worker tipli serverdən ibarət olacaq. Avtomatlaşdırma üçün ansible proqram təminatı master node üzərində quraşdırılacaq və özü də daxil olmaqla digər nodeları idarə edəcək(Klasterə sonradan worker tipli node əlavə edilməsi üçün ayrıca playbook repozitoridə yerləşdirilmişdir). Host adları və ip ünvanları xüsusiləşdirilə bilər:
+Bu repozitori, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible playbook-ları özündə birləşdirir. Repozitori virtual, fiziki və ya bulud texnologiyalarında yerləşən serverlər üzərinə icra edilə bilər. Qurulum üçün 3 ədəd Linux distributivi (Centos8) quraşdırılmış serverə ehtiyac var. Klaster, 1 ədəd master və 2 ədəd worker tipli serverdən ibarət olacaq. Hər 3 serverin global şəbəkəyə (internet) çıxışı təmin edilməlidir. Qurulum hər 3 serverdə "root" istifadəçisi vasitəsilə aparılacaq (əlavə sazlamalar aparmaqla adi istifadəçi vasitəsilə də reallaşdırmaq olar).  Avtomatlaşdırma üçün ansible proqram təminatı master node üzərində quraşdırılacaq və özü də daxil olmaqla digər nodeları idarə edəcək (Klasterə sonradan worker tipli node əlavə edilməsi üçün ayrıca playbook repozitoridə yerləşdirilmişdir). Qurulum, Centos8 distributivi üzərində testləşdirilib. Host adları və ip ünvanları xüsusiləşdirilə bilər:
    master
    worker1
    worker2
@@ -7,9 +7,9 @@ Bu repozitory, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
 İnstruksiya:
 
 1. Master node üzərində "git" proqram təminatı vasitəsilə qurulum üçün istifadə ediləcək repozitory yüklənir (əgər master node-da "git" yoxdursa, əvvəlcə onu quraşdırmaq gərəkdir):
-   [root@master ~]# 
+   [root@master ~]# git clone https://github.com/anargurbanli/k8s-ansible
 
-2. Serverlərin bir-birini görə bilməsi üçün host fayllarda (və ya DNS) uyğun sazlamaların aparılması və ip adreslərin host adları ilə adlandırılır:
+2. Serverlərin bir-birini görə bilməsi üçün host fayllarda (və ya DNS serverdə) uyğun sazlamaların aparılır və ip adreslər host adları ilə adlandırılır:
    [root@master ~]# cat << /etc/hosts >> EOF
     > 10.1.31.13		master
     > 10.1.31.14		worker1
@@ -33,6 +33,18 @@ Bu repozitory, kubetnetes klaster qurulumunu avtomatlaşdırmaq üçün ansible 
    [root@master ~]# dnf install -y epel-release
    [root@master ~]# dnf install -y ansible
    
+5. Node-ların idarəolunmasını yoxlamaq üçün, master node-da yüklənmiş repozitoriyə daxil olmaq və "hosts" faylında sazlamalar apararaq master və worker node-ların adlarını düzgün qeyd etmək gərəkdir.
+[root@master k8s-ansible]# vim hosts
 
-Bundan sonra master nodedan ansible vasitəsilə hər 3 nodeun idarəedilmə imkanının olması yoxlanılmalıdır (# ansible all -m ping).
-Repozitori master node vasitəsilə yükləndikdən sonra, ilk öncə hosts faylında uyğun sazlamalar aparılaraq master və worker nodeların adlarını xüsusiləşdirmək gərəkdir. Bundan sonra "vars_file" faylında sazlama aparılaraq klasterdə yerləşdiriləcək pod-lar üçün şəbəkə təyinatı pods_network parametrinə qiymət təyin etməklə aparmaq olar. Sazlamalar bitdikdən sonra "ansible-playbook k8s-install.yml" komandasını icra etməklə klasterin qurulumunu icra etmək olar. Qurulum uğurla bitdikdən sonra master node üzərində "kubectl get nodes" komandası vasitəsilə klasterin cari vəziyyətini yoxlamaq mümkündür.
+6. Master node-un ansible vasitəsilə bütün nodeları idarəetmə imkanı yoxlanılır:
+   [root@master k8s-ansible]# ansible all -m ping
+
+7. Master node-da cari qovluqda "vars_file" faylında pods_network parametrinə qiymət təyin etməklə, klasterdə yaradılacaq pod-lar üçün şəbəkə təyin edilməsini xüsusiləşdirmək mümkündür.
+
+8. Master node-da cari qovluqda "k8s-install.yml" playbook-u işə salınır və qurulum icra olunur:
+  [root@master k8s-ansible]# ansible-playbook k8s-install.yml
+
+9. Qurulum bitdikdən sonra master node üzərində "kubectl" komandası vasitəsilə klasterin cari vəziyyəti yoxlanılır:
+  [root@master k8s-ansible]# kubectl get nodes
+
+10. Klasterə başqa node-lar əlavə etmək üçün, 
