@@ -1,5 +1,5 @@
 ---
-###### ADD-WORKER ######
+###### GLOBAL ######
 - hosts: worker3
   vars_files:
   - vars_file
@@ -18,62 +18,65 @@
      name: firewalld
      state: stopped
      enabled : no
-     
-  - name: Play3 Firewall servisin deaktiv edilməsi
-    service:
-     name: firewalld
-     state: stopped
-     enabled : no
    
   - name: Play4 Selinux servisin deaktiv edilməsi
     command: setenforce 0
 
-  - name: Play5 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
+  - name: Play5 Selinux servisin restart zamanı deaktiv olmasının təmin edilməsi
+    selinux:
+      state: disabled
+      
+  - name: Play6 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
     shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-  - name: Play6 Docker CE qurulumu icra olunur
+  - name: Play7 Docker CE qurulumu icra olunur.
     shell: dnf install --nobest -y docker-ce
 
-  - name: Play7 Kubernetes üçün repozitori yaradılması
+  - name: Play8 Kubernetes üçün repozitori yaradılması
     yum_repository:
      name: Kubernetes
      description: Kubernetes YUM repository
      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
-  - name: Play8 Lazımi paketlərin yüklənməsi
+  - name: Play9 Lazımi servis paketlərin yüklənməsi
     dnf:
      name: "{{ item }}"
      state: present
     loop: "{{ packages }}"
 
-  - name: Play9 Docker cgroup drayverinin systemd olaraq təyin edilməsi
+  - name: Play10 Docker cgroup drayverinin systemd olaraq təyin edilməsi
     lineinfile:
      path: /usr/lib/systemd/system/docker.service
      regexp: '^ExecStart'
      line: 'ExecStart=/usr/bin/dockerd -H fd:// --exec-opt native.cgroupdriver=systemd'
      
-  - name: Play10 Daemon Reload 
+  - name: Play11 Docker daemon reload edilməsi
     systemd:
      state: restarted
      daemon_reload: yes
      name: docker
 
-  - name: Play11 Servislərin işə salınması və aktivləşdirilməsi
+  - name: Play12 Servislərin işə salınması və aktivləşdirilməsi
     service:
      name: "{{ item }}"
      state: started
      enabled: yes
     loop: "{{ services }}"
 
-  - name: Play12 Klaster IPV4 komunikasiyasını təmin edilməsi üçün br_netfilter modulunun aktivləşdirilməsi
+  - name: Play13 Klaster IPV4 komunikasiyasını təmin edilməsi üçün br_netfilter modulunun aktivləşdirilməsi
     sysctl:
      name: net.bridge.bridge-nf-call-iptables
      value: 1
      state: present
 
-  - name: Play13 Master node formalaşdırdığı tokenin worker nodelara köçürülməsi
+###### WORKER NODE ######
+- hosts: workers
+  vars_files:
+  - vars_file
+  tasks:
+  - name: Play14 Master node formalaşdırdığı tokenin worker nodelara köçürülməsi
     copy: src={{ token_file }} dest=join_token
 
-  - name: Play14 Worker nodeların klasterə əlavə edilməsi
+  - name: Play15 Worker nodeların klasterə əlavə edilməsi
     shell: "`grep -i 'kubeadm join' join_token`"
