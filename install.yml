@@ -39,7 +39,7 @@
      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
-  - name: Play9 Lazımi paketlərin yüklənməsi
+  - name: Play9 Lazımi servis paketlərin yüklənməsi
     dnf:
      name: "{{ item }}"
      state: present
