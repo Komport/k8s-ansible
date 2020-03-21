@@ -31,7 +31,7 @@
   - name: Play5 Docker CE quraşdırmaq üçün repozitori əlavə edilməsi
     shell: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-  - name: Play6 Install Docker CE
+  - name: Play6 Docker CE qurulumu icra olunur
     shell: dnf install --nobest -y docker-ce
 
   - name: Play7 Kubernetes üçün repozitori yaradılması
